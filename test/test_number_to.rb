@@ -34,11 +34,13 @@ class NumberToTests < Minitest::Test
   end
 
   def test_words
+    assert NumberTo.to_words(52) == 'fifty two'
     assert NumberTo.to_words(100) == 'one hundred'
     assert NumberTo.to_words(2005) == 'two thousand five'
     assert NumberTo.to_words(2805) == 'two thousand eight hundred five'
     assert NumberTo.to_words(2895) == 'two thousand eight hundred ninety five'
     assert NumberTo.to_words(32895) == 'thirty two thousand eight hundred ninety five'
     assert NumberTo.to_words(132895) == 'one hundred thirty two thousand eight hundred ninety five'
+    assert NumberTo.to_words(20132895) == 'twenty million one hundred thirty two thousand eight hundred ninety five'
   end
 end
