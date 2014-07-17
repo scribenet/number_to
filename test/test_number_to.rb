@@ -15,4 +15,15 @@ class NumberToTests < Minitest::Test
     assert NumberTo.to_lower_roman(594) == 'dxciv'
   end
 
+  def test_upper_alpha
+    assert NumberTo.to_upper_alpha(1) == 'A'
+    assert NumberTo.to_upper_alpha(12) == 'L'
+    assert NumberTo.to_upper_alpha(79) == 'AAAA'
+  end
+
+  def test_lower_alpha
+    assert NumberTo.to_lower_alpha(1) == 'a'
+    assert NumberTo.to_lower_alpha(12) == 'l'
+    assert NumberTo.to_lower_alpha(79) == 'aaaa'
+  end
 end
