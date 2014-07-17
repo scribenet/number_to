@@ -26,4 +26,10 @@ class NumberToTests < Minitest::Test
     assert NumberTo.to_lower_alpha(12) == 'l'
     assert NumberTo.to_lower_alpha(79) == 'aaaa'
   end
+
+  def test_ordinal
+    assert NumberTo.to_ordinal(1) == '1st'
+    assert NumberTo.to_ordinal(12) == '12th'
+    assert NumberTo.to_ordinal(803) == '803rd'
+  end
 end
