@@ -1,6 +1,8 @@
 number_to
 =========
 
+[![Build Status](https://travis-ci.org/scribenet/number_to.svg?branch=master)](https://travis-ci.org/scribenet/number_to)[![Coverage Status](https://coveralls.io/repos/scribenet/number_to/badge.png?branch=master)](https://coveralls.io/r/scribenet/number_to?branch=master)
+
 Convenience methods for converting Ruby Fixnums to a few String formats.
 
 Pure Ruby, no runtime dependencies. We found it useful to have these in one place with no additional dependencies, hence no cherry-picking from ActiveSupport, etc.
