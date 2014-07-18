@@ -43,9 +43,18 @@ module NumberWords
     'four' => 'fourth',
     'five' => 'fifth',
     'six' => 'sixth',
-    'seven' => 'sevent',
+    'seven' => 'seventh',
     'eight' => 'eighth',
     'nine' => 'ninth',
+    'One' => 'First',
+    'Two' => 'Second',
+    'Three' => 'Third',
+    'Four' => 'Fourth',
+    'Five' => 'Fifth',
+    'Six' => 'Sixth',
+    'Seven' => 'Seventh',
+    'Eight' => 'Eighth',
+    'Nine' => 'Ninth'
   }
 
   def to_words(num, options = {})
@@ -54,24 +63,19 @@ module NumberWords
 
   def to_word_ordinal(num, options = {})
     text = NumbersToWords.new(num, options).to_words
-    change_last_word(text, options[:case])
+    change_last_word(text)
   end
 
-  def change_last_word(text, cas)
+  def change_last_word(text)
     words = text.split(/(\W)/)
     last = words[words.size - 1]
-    new_last = ordinal_word(last, cas)
+    new_last = ordinal_word(last)
     words[words.size - 1] = new_last
     words.join
   end
 
-  def ordinal_word(word, cas)
-    if new_w = ORDINALS[word]
-      cas == 'upper' ? new_w.capitalize : new_w
-    else
-      word += 'th'
-      cas == 'upper' ? word.capitalize : word
-    end
+  def ordinal_word(word)
+    ORDINALS[word] || word += 'th'
   end
 
   class NumbersToWords
