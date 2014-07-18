@@ -43,4 +43,13 @@ class NumberToTests < Minitest::Test
     assert NumberTo.to_words(132895) == 'one hundred thirty two thousand eight hundred ninety five'
     assert NumberTo.to_words(20132895) == 'twenty million one hundred thirty two thousand eight hundred ninety five'
   end
+
+  def test_words_with_options
+    options = {styled: 1}
+    assert NumberTo.to_words(2805, options) == 'two thousand, eight hundred and five'
+    assert NumberTo.to_words(20132895, options) == 'twenty million, one hundred and thirty-two thousand, eight hundred and ninety-five'
+    options[:case] = 'upper'
+    assert NumberTo.to_words(2805, options) == 'Two Thousand, Eight Hundred and Five'
+    assert NumberTo.to_words(20132895, options) == 'Twenty Million, One Hundred and Thirty-Two Thousand, Eight Hundred and Ninety-Five'
+  end
 end

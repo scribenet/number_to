@@ -30,53 +30,99 @@ module NumberWords
     '80' => 'eighty',
     '90' => 'ninety'
   }
-  INDEX = { 1 => 'thousand',
-            2 => 'million',
-            3 => 'billion',
-            4 => 'trillion'
+  LARGE_NUMS = {
+    1 => 'thousand',
+    2 => 'million',
+    3 => 'billion',
+    4 => 'trillion'
   }
 
-  def to_words(num)
-    num = num.to_s
-    arr = num.each_char.to_a
-    collector = []
-    groups = arr.reverse.each_slice(3).to_a
-    groups.each_with_index do |group, i|
-      rearrange_group(group)
-      words = word_group(group)
-      words += ' ' + INDEX[i] if INDEX[i]
-      collector << words
+  def to_words(num, options = {})
+    NumbersToWords.new(num, options).to_words
+  end
+
+  class NumbersToWords
+    attr_reader :num, :options
+    attr_reader :hundred, :large_nums
+    DEFAULTS = {styled: false, case: 'lower', space: ' '}
+
+    def initialize(num, options = {})
+      @num = num.to_s
+      @options = DEFAULTS.merge(options)
+      set_style_opts
     end
-    collector.reverse.join(' ')
-  end
 
-  def rearrange_group(group)
-    group.reverse!
-    group.shift while group.first == '0'
-  end
-
-  def word_group(group)
-    case group.size
-      when 0; ''
-      when 1; WORDS[group[0]]
-      when 2; tenner(group[0], group[1])
-      when 3; hundreder(group)
+    def set_style_opts
+      @hundred = options[:styled] ? 'hundred and' : 'hundred'
+      @large_nums = options[:styled] ? large_nums_with_commas : LARGE_NUMS
     end
-  end
 
-  def hundreder(group)
-    [WORDS[group[0]],
-     'hundred',
-     tenner(group[1], group[2])
-    ].reject { |n| n.empty? }.join(' ')
-  end
+    def large_nums_with_commas
+      large_nums = LARGE_NUMS.dup
+      large_nums.each { |k,v| large_nums[k] = "#{v}," }
+      large_nums
+    end
 
-  def tenner(first, second)
-    # probably make this a case statement
-    return '' if first == '0' and second == '0'
-    return WORDS[second] if first == '0' and second != '0'
-    return WORDS[first + second] if first == '1'
-    return WORDS[first + second] if second == '0'
-    WORDS[first + '0'] + ' ' + WORDS[second]
+    def to_words
+      arr = num.each_char.to_a
+      groups = arr.reverse.each_slice(3).to_a
+      collector = words_for_groups(groups)
+      formatted_words(collector)
+    end
+
+    def formatted_words(collector)
+      words = collector.reverse.join(options[:space])
+      return words unless options[:case] == 'upper'
+      words.split(/(\W)/).map(&:capitalize).join.gsub(/ and/i, ' and')
+    end
+
+    def words_for_groups(groups)
+      collector = []
+      groups.each_with_index do |group, i|
+        rearrange_group(group)
+        words = word_group(group, i)
+        collector << words
+      end
+      collector
+    end
+
+    def rearrange_group(group)
+      group.reverse!
+      group.shift while group.first == '0'
+    end
+
+    def word_group(group, i)
+      words = basic_word_group(group)
+      words += options[:space] + large_nums[i] if large_nums[i]
+      words
+    end
+
+    def basic_word_group(group)
+      case group.size
+        when 0; ''
+        when 1; WORDS[group[0]]
+        when 2; tenner(group[0], group[1])
+        when 3; hundreder(group)
+      end
+    end
+
+    def hundreder(group)
+      [WORDS[group[0]],
+       hundred,
+       tenner(group[1], group[2])
+      ].reject { |n| n.empty? }.join(options[:space])
+    end
+
+    def tenner(first, second)
+      return '' if first == '0' and second == '0'
+      return WORDS[second] if first == '0' and second != '0'
+      return WORDS[first + second] if first == '1' or second == '0'
+      joined_tenner(first, second)
+    end
+
+    def joined_tenner(first, second)
+      joiner = options[:styled] ? '-' : options[:space]
+      WORDS[first + '0'] + joiner + WORDS[second]
+    end
   end
 end
