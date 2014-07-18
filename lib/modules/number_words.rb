@@ -36,9 +36,42 @@ module NumberWords
     3 => 'billion',
     4 => 'trillion'
   }
+  ORDINALS = {
+    'one' => 'first',
+    'two' => 'second',
+    'three' => 'third',
+    'four' => 'fourth',
+    'five' => 'fifth',
+    'six' => 'sixth',
+    'seven' => 'sevent',
+    'eight' => 'eighth',
+    'nine' => 'ninth',
+  }
 
   def to_words(num, options = {})
     NumbersToWords.new(num, options).to_words
+  end
+
+  def to_word_ordinal(num, options = {})
+    text = NumbersToWords.new(num, options).to_words
+    change_last_word(text, options[:case])
+  end
+
+  def change_last_word(text, cas)
+    words = text.split(/(\W)/)
+    last = words[words.size - 1]
+    new_last = ordinal_word(last, cas)
+    words[words.size - 1] = new_last
+    words.join
+  end
+
+  def ordinal_word(word, cas)
+    if new_w = ORDINALS[word]
+      cas == 'upper' ? new_w.capitalize : new_w
+    else
+      word += 'th'
+      cas == 'upper' ? word.capitalize : word
+    end
   end
 
   class NumbersToWords
@@ -71,7 +104,7 @@ module NumberWords
     end
 
     def formatted_words(collector)
-      words = collector.reverse.join(options[:space])
+      words = collector.reverse.join(options[:space]).gsub(/,$/,'')
       return words unless options[:case] == 'upper'
       words.split(/(\W)/).map(&:capitalize).join.gsub(/ and/i, ' and')
     end
@@ -79,6 +112,7 @@ module NumberWords
     def words_for_groups(groups)
       collector = []
       groups.each_with_index do |group, i|
+        next if group.all? { |e| e == '0' }
         rearrange_group(group)
         words = word_group(group, i)
         collector << words
@@ -107,9 +141,11 @@ module NumberWords
     end
 
     def hundreder(group)
+      tens = tenner(group[1], group[2])
+      hundred_joiner = tens.empty? ? 'hundred' : hundred
       [WORDS[group[0]],
-       hundred,
-       tenner(group[1], group[2])
+       hundred_joiner,
+       tens
       ].reject { |n| n.empty? }.join(options[:space])
     end
 
