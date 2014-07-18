@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s| 
   s.name = 'number_to'
-  s.version = Transmog::VERSION
+  s.version = '0.0.1'
   s.author = 'Dan Corrigan'
   s.email = 'dcorrigan@scribenet.com'
   s.homepage = 'http://www.scribenet.com'
