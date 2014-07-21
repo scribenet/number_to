@@ -1,61 +1,9 @@
 module NumberWords
-
-  WORDS = {
-    '0' => 'zero',
-    '1' => 'one',
-    '2' => 'two',
-    '3' => 'three',
-    '4' => 'four',
-    '5' => 'five',
-    '6' => 'six',
-    '7' => 'seven',
-    '8' => 'eight',
-    '9' => 'nine',
-    '10' => 'ten',
-    '11' => 'eleven',
-    '12' => 'twelve',
-    '13' => 'thirteen',
-    '14' => 'fourteen',
-    '15' => 'fifteen',
-    '16' => 'sixteen',
-    '17' => 'seventeen',
-    '18' => 'eighteen',
-    '19' => 'nineteen',
-    '20' => 'twenty',
-    '30' => 'thirty',
-    '40' => 'forty',
-    '50' => 'fifty',
-    '60' => 'sixty',
-    '70' => 'seventy',
-    '80' => 'eighty',
-    '90' => 'ninety'
-  }
-  LARGE_NUMS = {
-    1 => 'thousand',
-    2 => 'million',
-    3 => 'billion',
-    4 => 'trillion'
-  }
-  ORDINALS = {
-    'one' => 'first',
-    'two' => 'second',
-    'three' => 'third',
-    'four' => 'fourth',
-    'five' => 'fifth',
-    'six' => 'sixth',
-    'seven' => 'seventh',
-    'eight' => 'eighth',
-    'nine' => 'ninth',
-    'One' => 'First',
-    'Two' => 'Second',
-    'Three' => 'Third',
-    'Four' => 'Fourth',
-    'Five' => 'Fifth',
-    'Six' => 'Sixth',
-    'Seven' => 'Seventh',
-    'Eight' => 'Eighth',
-    'Nine' => 'Ninth'
-  }
+  DATA_FILE = File.read(File.join(File.dirname(__FILE__), '../data/number_words.yml'))
+  DAT = YAML.load(DATA_FILE)
+  WORDS = DAT[:words]
+  LARGE_NUMS = DAT[:large_nums]
+  ORDINALS = DAT[:ordinals]
 
   def to_words(num, options = {})
     NumbersToWords.new(num, options).to_words
@@ -166,3 +114,4 @@ module NumberWords
     end
   end
 end
+

@@ -56,6 +56,7 @@ class NumberToTests < Minitest::Test
 
   def test_to_word_ordinal
     options = {styled: 1}
+    assert NumberTo.to_word_ordinal(20, options) == 'twentieth'
     assert NumberTo.to_word_ordinal(25, options) == 'twenty-fifth'
     assert NumberTo.to_word_ordinal(25, options.merge({:case => 'upper'})) == 'Twenty-Fifth'
     assert NumberTo.to_word_ordinal(61, options) == 'sixty-first'
