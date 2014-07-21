@@ -1,68 +1,16 @@
 module NumberWords
-
-  WORDS = {
-    '0' => 'zero',
-    '1' => 'one',
-    '2' => 'two',
-    '3' => 'three',
-    '4' => 'four',
-    '5' => 'five',
-    '6' => 'six',
-    '7' => 'seven',
-    '8' => 'eight',
-    '9' => 'nine',
-    '10' => 'ten',
-    '11' => 'eleven',
-    '12' => 'twelve',
-    '13' => 'thirteen',
-    '14' => 'fourteen',
-    '15' => 'fifteen',
-    '16' => 'sixteen',
-    '17' => 'seventeen',
-    '18' => 'eighteen',
-    '19' => 'nineteen',
-    '20' => 'twenty',
-    '30' => 'thirty',
-    '40' => 'forty',
-    '50' => 'fifty',
-    '60' => 'sixty',
-    '70' => 'seventy',
-    '80' => 'eighty',
-    '90' => 'ninety'
-  }
-  LARGE_NUMS = {
-    1 => 'thousand',
-    2 => 'million',
-    3 => 'billion',
-    4 => 'trillion'
-  }
-  ORDINALS = {
-    'one' => 'first',
-    'two' => 'second',
-    'three' => 'third',
-    'four' => 'fourth',
-    'five' => 'fifth',
-    'six' => 'sixth',
-    'seven' => 'seventh',
-    'eight' => 'eighth',
-    'nine' => 'ninth',
-    'One' => 'First',
-    'Two' => 'Second',
-    'Three' => 'Third',
-    'Four' => 'Fourth',
-    'Five' => 'Fifth',
-    'Six' => 'Sixth',
-    'Seven' => 'Seventh',
-    'Eight' => 'Eighth',
-    'Nine' => 'Ninth'
-  }
+  DATA_FILE = File.read(File.join(File.dirname(__FILE__), '../data/number_words.yml'))
+  DAT = YAML.load(DATA_FILE)
+  WORDS = DAT[:words]
+  LARGE_NUMS = DAT[:large_nums]
+  ORDINALS = DAT[:ordinals]
 
   def to_words(num, options = {})
-    NumbersToWords.new(num, options).to_words
+    NumbersToWords.new(options).to_words(num)
   end
 
   def to_word_ordinal(num, options = {})
-    text = NumbersToWords.new(num, options).to_words
+    text = NumbersToWords.new(options).to_words(num)
     change_last_word(text)
   end
 
@@ -83,8 +31,7 @@ module NumberWords
     attr_reader :hundred, :large_nums
     DEFAULTS = {styled: false, case: 'lower', space: ' '}
 
-    def initialize(num, options = {})
-      @num = num.to_s
+    def initialize(options = {})
       @options = DEFAULTS.merge(options)
       set_style_opts
     end
@@ -100,8 +47,8 @@ module NumberWords
       large_nums
     end
 
-    def to_words
-      arr = num.each_char.to_a
+    def to_words(num)
+      arr = num.to_s.each_char.to_a
       groups = arr.reverse.each_slice(3).to_a
       collector = words_for_groups(groups)
       formatted_words(collector)
@@ -166,3 +113,4 @@ module NumberWords
     end
   end
 end
+

@@ -20,5 +20,8 @@ class Fixnum
   def to_word_ordinal(options = {})
     NumberTo.to_word_ordinal(self, options)
   end
+  def to_character_set(characters, options = {})
+    NumberTo.to_character_set(self, characters, options)
+  end
 end
 
