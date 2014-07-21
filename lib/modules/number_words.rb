@@ -6,11 +6,11 @@ module NumberWords
   ORDINALS = DAT[:ordinals]
 
   def to_words(num, options = {})
-    NumbersToWords.new(num, options).to_words
+    NumbersToWords.new(options).to_words(num)
   end
 
   def to_word_ordinal(num, options = {})
-    text = NumbersToWords.new(num, options).to_words
+    text = NumbersToWords.new(options).to_words(num)
     change_last_word(text)
   end
 
@@ -31,8 +31,7 @@ module NumberWords
     attr_reader :hundred, :large_nums
     DEFAULTS = {styled: false, case: 'lower', space: ' '}
 
-    def initialize(num, options = {})
-      @num = num.to_s
+    def initialize(options = {})
       @options = DEFAULTS.merge(options)
       set_style_opts
     end
@@ -48,8 +47,8 @@ module NumberWords
       large_nums
     end
 
-    def to_words
-      arr = num.each_char.to_a
+    def to_words(num)
+      arr = num.to_s.each_char.to_a
       groups = arr.reverse.each_slice(3).to_a
       collector = words_for_groups(groups)
       formatted_words(collector)
