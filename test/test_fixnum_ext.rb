@@ -62,4 +62,12 @@ class NumberToTests < Minitest::Test
     assert 1000000.to_word_ordinal(options) == 'one millionth'
     assert 1000000000.to_word_ordinal(options) == 'one billionth'
   end
+
+  def test_fixnum_to_character_set
+    assert 3.to_character_set(['#', '$'], {repeat: true}) == '##'
+    assert 3.to_character_set(['#', '$'], {repeat: false}) == '#'
+    notes = %w(* † ‡ ¶)
+    assert 12.to_character_set(notes, {repeat: false}) == '¶'
+    assert 21.to_character_set(notes, {repeat: false}) == '*'
+  end
 end

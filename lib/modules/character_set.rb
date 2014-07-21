@@ -1,8 +1,9 @@
 module CharacterSet
   class CharacterSetConverter
     attr_reader :characters, :options, :size
-    def initialize(characters, options)
+    def initialize(characters, options = {})
       @characters = characters
+      options[:repeat] = true unless options.include?(:repeat)
       @options = options
       @size = characters.size
     end
@@ -24,7 +25,7 @@ module CharacterSet
   ALPH = ("a" .. "z").to_a
   ALPHABETTER = CharacterSetConverter.new(ALPH, {repeat: true})
 
-  def to_character_set(num, characters, options)
+  def to_character_set(num, characters, options = {})
     CharacterSetConverter.new(characters, options).to_characters(num)
   end
 
