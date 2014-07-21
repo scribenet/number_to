@@ -1,9 +1,4 @@
 module CharacterSet
-
-  def to_character_set(num, characters, options)
-    CharacterSetConverter.new(characters, options).to_characters(num)
-  end
-
   class CharacterSetConverter
     attr_reader :characters, :options, :size
     def initialize(characters, options)
@@ -24,5 +19,20 @@ module CharacterSet
     def calc_repetition(num)
       num % size == 0 ? num / size : (num / size) + 1
     end
+  end
+
+  ALPH = ("a" .. "z").to_a
+  ALPHABETTER = CharacterSetConverter.new(ALPH, {repeat: true})
+
+  def to_character_set(num, characters, options)
+    CharacterSetConverter.new(characters, options).to_characters(num)
+  end
+
+  def to_lower_alpha(num)
+    ALPHABETTER.to_characters(num)
+  end
+
+  def to_upper_alpha(num)
+    to_lower_alpha(num).upcase
   end
 end
